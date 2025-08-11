@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import MainView from "../views/MainView.vue";
+import GameView from "../views/GameView.vue";
 import HomeView from "../views/HomeView.vue";
 
 const routes = [
-    { path: '/game', name: 'Main', component: MainView
+    { path: '/game', name: 'Game', component: GameView
     }, { path: '/home', name: 'Home', component: HomeView
     },
 ]

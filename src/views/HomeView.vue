@@ -44,7 +44,7 @@
 
 
 
-<style >
+<style>
 .home-view {
   position: relative;
   width: 100vw;
@@ -67,16 +67,16 @@
 }
 .winner-turtle {
   position: absolute;
-  width: 40%;
+  width: 55%;
   height: 80%;
-  top: 25%;
-  left: 68%;
+  top: 18%;
+  left: 60%;
   z-index: 10;
-  transform: rotate(10deg);
+  transform: rotate(5deg);
   transition: transform 0.75s ease-in-out;
 }
 .winner-turtle:hover {
-  transform: rotate(20deg);
+  transform: rotate(13deg);
 }
 
 
