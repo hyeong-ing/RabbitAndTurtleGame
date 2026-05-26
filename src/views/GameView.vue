@@ -1,6 +1,4 @@
 <script>
-import {ref} from "vue";
-
 export default {
   name: 'GameView',
   data() {
@@ -12,8 +10,12 @@ export default {
   },
   methods: {
     gameStart() {
-      const currentSeconds = ref(new Date().getSeconds());
-      if(currentSeconds.value % 2 === 0) {
+      this.rabbitRunning = false;
+      this.rabbitStopping = false;
+      this.turtleRunning = false;
+
+      const currentSeconds = new Date().getSeconds();
+      if(currentSeconds % 2 === 0) {
         this.rabbitRunning = true;
       } else  {
         this.rabbitStopping = true;
@@ -21,7 +23,9 @@ export default {
       this.turtleRunning = true;
     },
     reload() {
-      window.location.reload(true);
+      this.rabbitRunning = false;
+      this.rabbitStopping = false;
+      this.turtleRunning = false;
     }
   }
 }
@@ -35,9 +39,11 @@ export default {
   <div class="main-view">
 
     <div class="rabbit-ground">
+      <img src="../assets/green1.png" alt="토끼 레인 풀밭" class="track-green rabbit-track-green" />
       <div class="rabbit-content">
-        <img src="../assets/runrabbit.png" alt="달리는토끼" class="running-rabbit"
+        <img src="../assets/rabbit2.png" alt="달리는토끼" class="running-rabbit"
              :class="{run: rabbitRunning, stop: rabbitStopping}"/>
+        <img src="../assets/tree.png" alt="나무" class="tree"/>
         <div class="rabbit-goalline"/>
       </div>
     </div>
@@ -48,22 +54,11 @@ export default {
     <button class="game-start" @click="gameStart"> 시작 </button>
 
 
-    <div class="rabbit-green">
-      <img src="../assets/tree.png" alt="나무" class="tree" />
-      <img src="../assets/biggreen.png" alt="풀밭" class="rabbit-green01" />
-      <img src="../assets/biggreen.png" alt="풀밭" class="rabbit-green02" />
-      <img src="../assets/biggreen.png" alt="풀밭" class="rabbit-green03" />
-    </div>
-
-
-
     <div class="turtle-ground">
+      <img src="../assets/green2.png" alt="거북이 레인 풀밭" class="track-green turtle-track-green" />
       <div class="turtle-content">
-        <img src="../assets/runturtle.png" alt="달리는 거북이" class="running-turtle" :class="{run: turtleRunning}"/>
+        <img src="../assets/turtle2.png" alt="달리는 거북이" class="running-turtle" :class="{run: turtleRunning}"/>
         <div class="turtle-goalline"/>
-        <img src="../assets/sea.png" alt="파도"  class="turtle-sea01"/>
-        <img src="../assets/sea.png" alt="파도"  class="turtle-sea02"/>
-        <img src="../assets/sea.png" alt="파도"  class="turtle-sea03"/>
       </div>
     </div>
 
@@ -93,7 +88,7 @@ export default {
   font-weight: bold;
   text-align: center;
   transform: rotate(-30deg);
-  background: rgba(246, 248, 192, 0.75);
+  background: #f8d0e5;
   border:  5px solid white;
   border-radius:  100px;
   z-index: 15;
@@ -104,7 +99,7 @@ export default {
 .game-return:hover{
   width: 10%;
   height: 15%;
-  background: rgba(137, 248, 180, 0.85);
+  background: rgb(244, 192, 220);
   transform: rotate(-20deg);
 }
 .main-return{
@@ -113,7 +108,7 @@ export default {
   left: 46%;
   width: 9%;
   height: 14%;
-  background: rgba(244, 161, 250, 0.55);
+  background: rgba(245, 186, 250, 0.55);
   border:  5px solid white;
   border-radius:  100px;
   font-size: 1.2rem;
@@ -127,7 +122,7 @@ export default {
 .main-return:hover{
   width: 10%;
   height: 15%;
-  background: rgba(248, 137, 141, 0.63);
+  background: rgba(242, 156, 250, 0.55);
 }
 .game-start{
   position: absolute;
@@ -136,7 +131,7 @@ export default {
   width: 9%;
   height: 14%;
   transform: rotate(24deg);
-  background: rgba(192, 240, 248, 0.75);
+  background: rgba(130, 170, 114, 0.75);
   border:  5px solid white;
   border-radius:  100px;
   font-size: 1.2rem;
@@ -150,18 +145,17 @@ export default {
 .game-start:hover{
   width: 10%;
   height: 15%;
-  background: rgba(244, 234, 110, 0.63);
+  background: rgba(98, 129, 86, 0.75);
   transform: rotate(30deg);
 }
 
-
-/* 토끼 */
 .rabbit-ground{
   position: absolute;
   top: 0;
   width: 100%;
   height: 50%;
-  background: #89f8b4;
+  background: #f6f6d1;
+  overflow: hidden;
 }
 .rabbit-content{
   flex-direction: row;
@@ -184,10 +178,10 @@ export default {
 
 .running-rabbit{
   position: absolute;
-  top: 17%;
+  top: 26%;
   left: -10px;
   width:20%;
-  z-index: 10;
+  z-index: 15;
 }
 .running-rabbit.run{
   animation: rabbit-run 5s linear forwards;
@@ -203,52 +197,27 @@ export default {
   height: 100%;
   border-left: 3px solid white;
   border-right: 3px solid white;
-  background: #b3d6f8;
-  z-index: 5;
+  background: #dbebfa;
+  z-index: 8;
 }
 
-
-.rabbit-green{
+.tree {
   position: absolute;
-  width: 100%;
-  height: 80%;
-  top: 10%;
-}
-.rabbit-green01{
-  position: absolute;
-  width: 40%;
-  height: 56%;
-  z-index: 10;
-}
-.rabbit-green02{
-  position: absolute;
-  left: 40%;
-  width: 40%;
-  height: 56%;
-  z-index: 10;
-}
-.rabbit-green03{
-  position: absolute;
-  left: 80%;
-  width: 40%;
-  height: 56%;
-  z-index: 10;
-}
-.tree{
-  position: absolute;
-  left: 35%;
-  top: -17%;
-  width: 30%;
-  height: 70%;
+  width: 27vw;
+  height: auto;
+  top: -14%;
+  left: 25%;
+  transform: translateX(50%);
+  z-index: 12;
 }
 
-/* 거북이 */
 .turtle-ground{
   position: absolute;
   top: 50%;
   width: 100%;
   height: 50%;
-  background: #b3d6f8;
+  background: #eef6fd;
+  overflow: hidden;
 }
 .turtle-content{
   flex-direction: row;
@@ -263,10 +232,10 @@ export default {
 }
 .running-turtle{
   position: absolute;
-  bottom: 3.5%;
+  bottom: -10%;
   left: -10px;
   width:20%;
-  z-index: 7;
+  z-index: 15;
 }
 .running-turtle.run {
   animation: turtle-run 6s linear forwards;
@@ -278,15 +247,27 @@ export default {
   height: 100%;
   border-left: 3px solid white;
   border-right: 3px solid white;
-  background: #89f8b4;
-  z-index: 5;
+  background: #fbfbb4;
+  z-index: 8;
 }
-.turtle-sea01{
+
+.track-green{
   position: absolute;
-  top: -25%;
   width: 100%;
-  height: 125%;
+  max-width: none;
+  height: auto;
+  left: -90px;
+  object-fit: fill;
+  pointer-events: none;
   z-index: 10;
+}
+
+.rabbit-track-green{
+  bottom: -5%;
+}
+
+.turtle-track-green{
+  bottom: 15%;
 }
 
 </style>

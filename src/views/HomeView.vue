@@ -1,253 +1,184 @@
-<script setup lang="ts">
-
-</script>
-
-
-
-
 <template>
   <div class="home-view">
-    <img src="@/assets/winnerturtle.png" alt="이긴거북이" class="winner-turtle"/>
-    <img src="@/assets/winnerrabbit.png" alt="이긴토끼" class="winner-rabbit"/>
+    <div class="line line-pink-top"></div>
+    <div class="line line-pink-bottom"></div>
+    <div class="line line-green"></div>
 
-    <div class="rabbit-container">
-      <img src="../assets/speech1.png" alt="말풍선1" class="speech-bubble1"/>
-      <p class="rabbit-text"> 제가 더 잘해욥! </p>
-    </div>
+    <img src="@/assets/title.png" alt="토끼와 거북이" class="home-title" />
+    <img src="@/assets/explain.png" alt="토끼와 거북이 국제 대회 설명" class="home-explain" />
+    <img src="@/assets/turtle1.png" alt="왕관을 쓴 거북이" class="home-turtle" />
+    <img src="@/assets/rabbit1.png" alt="왕관을 쓴 토끼" class="home-rabbit" />
 
-    <div class="turtle-container">
-      <img src="../assets/speech2.png" alt="말풍선2" class="speech-bubble2"/>
-      <p class="turtle-text"> 나를 뽑아줘잉~ </p>
-    </div>
-
-    <div class="banner">
-      <div class="banner1">
-        <p class="banner-text1"> 토끼와 거북이 </p>
-      </div>
-
-      <div class="banner2">
-        <img src="../assets/red.png" alt="리본" class="ribbon1"/>
-        <p class="banner-text2"> 토끼와 거북이 국제대회에 오신걸 환영합니다.</p>
-        <p class="banner-text3"> 이번 대회에서 토끼와 거북이 중 누가 이길지</p>
-        <p class="banner-text4"> 친구들과 내기해보세요.</p>
-      </div>
-    </div>
-
-    <div class="btn-container">
-      <button class="main-button" @click="$router.push({ path:'/game' })"> 보러가기 </button>
-    </div>
-
+    <button class="enter-button" type="button" @click="$router.push('/game')">입장하기</button>
   </div>
-
 </template>
 
 
 
-
-<style>
+<style scoped>
 .home-view {
   position: relative;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background: #b3d6f8;
+  background: #eee8eb;
 }
-.winner-rabbit {
+
+.home-title {
   position: absolute;
-  width: 28%;
-  height: 60%;
+  top: -9%;
+  left: 50%;
+  width: min(45vw, 620px);
+  height: auto;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.home-explain {
+  position: absolute;
+  top: 13%;
+  left: 50%;
+  width: min(70vw, 1200px);
+  height: auto;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.home-turtle {
+  position: absolute;
   top: -5%;
-  left: -2%;
-  z-index: 10;
-  transform: rotate(20deg);
-  transition: transform 0.75s ease;
+  right: 5%;
+  width: min(30vw, 600px);
+  transform: rotate(15deg);
+  height: auto;
+  z-index: 3;
 }
-.winner-rabbit:hover {
-  transform: rotate(10deg);
-}
-.winner-turtle {
+
+.home-rabbit {
   position: absolute;
-  width: 55%;
-  height: 80%;
-  top: 18%;
-  left: 60%;
-  z-index: 10;
-  transform: rotate(5deg);
-  transition: transform 0.75s ease-in-out;
-}
-.winner-turtle:hover {
-  transform: rotate(13deg);
+  left: -1%;
+  bottom: -3%;
+  width: min(44vw, 450px);
+  height: auto;
+  z-index: 3;
 }
 
-
-/* 토끼 말풍선 */
-.rabbit-container {
+.enter-button {
   position: absolute;
-  width: 30vw;
-  height: 25vh;
-  left:18%;
-  top: 1%;
-  z-index: 10;
-}
-
-.speech-bubble1 {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-5deg);
-}
-.rabbit-text {
-  position: absolute;
-  font-size: 2.1em;
-  width: 60%;
-  height: 30%;
-  top: 35%;
-  left: 23%;
-  color: black;
-  text-align: center;
-  transform: rotate(-5deg);
-}
-
-
-.turtle-container {
-  position: absolute;
-  width: 30vw;
-  height: 40vh;
-  left:70%;
-  top: 10%;
-  z-index: 10;
-}
-.speech-bubble2 {
-  width: 100%;
-  height: 100%;
-  z-index: 10;
-  transform: rotate(25deg);
-}
-.turtle-text {
-  position: absolute;
-  font-size: 2.1em;
-  width: 60%;
-  height: 30%;
-  top: 36%;
-  left: 20%;
-  color: black;
-  text-align: center;
-  transform: rotate(30deg);
-}
-
-
-
-/* 배너요소 */
-.banner {
-  position: absolute;
-  width: 70%;
-  height: 60%;
-  top: 40%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  background: #89f8b4;
-  border-radius: 30px;
-  border: white solid 10px;
-}
-/* 토끼와 거북이 */
-.banner1 {
-  position: absolute;
-  width: 100%;
-  height: 25%;
-  top: 17%;
-  left: 50%;
-  z-index: 20;
-  text-align: center;
-  transform: translate(-50%, -50%);
-  font-size: 6.4rem;
-}
-.banner-text1 {
-  font-size: 6.4rem;
-  color: #cfa661;
-  font-family: BagelFatOne-Regular;
-}
-
-
-.banner2 {
-  position: absolute;
-  width: 100%;
-  height: 60%;
-  top: 60%;
-  left: 50%;
-  text-align: center;
-  transform: translate(-50%, -50%);
-  flex-direction: column;
-}
-
-/* 리본 */
-.ribbon1 {
-  position: absolute;
-  width: 60%;
-  top: 40%;
-  transform: translate(-50%, -50%);
-  transition: width 0.75s ease-in-out;
-}
-.ribbon1:hover {
-  width:70%;
-}
-
-.banner-text2 {
-  position: absolute;
-  font-size: 1.7rem;
-  width: 100%;
-  top: 62%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #b1791c;
-  font-family: Danjo-bold-Regular;
-}
-.banner-text3 {
-  position: absolute;
-  font-size: 1.7rem;
-  top: 75%;
-  left: 50%;
-  width: 100%;
-  transform: translate(-50%, -50%);
-  text-align:  center;
-  color: #b1791c;
-  font-family: Danjo-bold-Regular;
-}
-.banner-text4 {
-  position: absolute;
-  font-size: 1.7rem;
-  width: 100%;
-  top: 88%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align:  center;
-  color: #b1791c;
-  font-family: Danjo-bold-Regular;
-}
-
-.btn-container{
-  position: absolute;
-  width: 100%;
-  height: 20%;
-  top: 90%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
-.main-button {
-  width: 20%;
-  height: 38%;
-  font-size: 1.7rem;
-  font-weight:  bold;
-  font-family: Danjo-bold-Regular;
-  border:  white solid 4px;
-  border-radius: 40px;
-  color: #b1791c;
-  background: #89f8b4;
+  top: 67.5%;
+  width: min(15vw, 280px);
+  min-width: 210px;
+  height: 80px;
+  transform: translateX(-50%);
+  border: 0;
+  border-radius: 28px;
+  background: #8caa97;
+  box-shadow: 18px 18px 20px rgb(204, 203, 203);
+  color: #ede6e6;
   cursor: pointer;
-  transition: background 0.4s ease, border 0.4s ease, color 0.4s ease;
+  font-family: BagelFatOne-Regular, Danjo-bold-Regular, sans-serif;
+  font-size: 2.45rem;
+  line-height: 1;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  z-index: 4;
 }
-.main-button:hover {
-  background: #b1791c;
-  color: #89f8b4;
-  border:  white solid 7px;
+
+.enter-button:hover {
+  background: #dfb6cc;
+  box-shadow: 16px 16px 18px rgba(53, 49, 51, 0.3);
+  transform: translateX(-50%) translateY(2px);
+}
+
+.enter-button:focus-visible {
+  outline: 4px solid #df82cb;
+  outline-offset: 6px;
+}
+
+.line {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.line-pink-top {
+  top: 17.5%;
+  left: 9.5%;
+  width: 20%;
+  height: 30%;
+  border-top: 4px solid #d692c8;
+  border-left: 4px solid #d692c8;
+  border-radius: 100% 0 0 0;
+}
+
+.line-pink-bottom {
+  left: 22.8%;
+  bottom: 11.2%;
+  width: 51.4%;
+  height: 0;
+  border-top: 4px solid #d692c8;;
+}
+
+.line-green {
+  right: 10.8%;
+  bottom: 11.2%;
+  width: 16%;
+  height: 40.5%;
+  border-right: 4px solid #436d56;
+  border-bottom: 4px solid #436d56;
+  border-radius: 0 0 100% 0;
+}
+
+@media (max-width: 900px) {
+  .home-title {
+    top: -2%;
+    width: 74vw;
+  }
+
+  .home-explain {
+    top: 31%;
+    width: 88vw;
+  }
+
+  .home-turtle {
+    top: 7%;
+    right: -1%;
+    width: 37vw;
+  }
+
+  .home-rabbit {
+    left: -8%;
+    bottom: -3%;
+    width: 42vw;
+  }
+
+  .enter-button {
+    top: 72.5%;
+    width: 40vw;
+    min-width: 160px;
+    height: 72px;
+    border-radius: 22px;
+    font-size: 1.8rem;
+  }
+
+  .line-pink-top {
+    top: 15%;
+    left: 5%;
+    width: 34%;
+    height: 30%;
+  }
+
+  .line-pink-bottom {
+    left: 22%;
+    bottom: 7.2%;
+    width: 63%;
+  }
+
+  .line-green {
+    right: 4%;
+    bottom: 7.2%;
+    width: 26%;
+    height: 41%;
+  }
 }
 </style>
