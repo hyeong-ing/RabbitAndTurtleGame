@@ -1,273 +1,258 @@
-<script>
-export default {
-  name: 'GameView',
-  data() {
-    return {
-      rabbitRunning: false,
-      rabbitStopping: false,
-      turtleRunning: false,
-    }
-  },
-  methods: {
-    gameStart() {
-      this.rabbitRunning = false;
-      this.rabbitStopping = false;
-      this.turtleRunning = false;
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useRaceGame } from '@/composables/useRaceGame'
 
-      const currentSeconds = new Date().getSeconds();
-      if(currentSeconds % 2 === 0) {
-        this.rabbitRunning = true;
-      } else  {
-        this.rabbitStopping = true;
-      }
-      this.turtleRunning = true;
-    },
-    reload() {
-      this.rabbitRunning = false;
-      this.rabbitStopping = false;
-      this.turtleRunning = false;
-    }
-  }
-}
+const router = useRouter()
+const rabbitEl = ref(null)
+const turtleEl = ref(null)
 
+const {
+  countdown,
+  message,
+  reset,
+  running,
+  start,
+  winner,
+} = useRaceGame({ rabbitEl, turtleEl })
 </script>
 
-
-
-
 <template>
-  <div class="main-view">
+  <main class="game-view">
+    <section class="lane rabbit-lane" aria-label="토끼 경주 구역">
+      <img src="@/assets/green1.png" alt="" class="grass rabbit-grass" />
+      <img ref="rabbitEl" src="@/assets/rabbit2.png" alt="달리는 토끼" class="runner runner-rabbit" />
+      <img src="@/assets/tree.png" alt="" class="tree" />
+      <div class="goal rabbit-goal"></div>
+    </section>
 
-    <div class="rabbit-ground">
-      <img src="../assets/green1.png" alt="토끼 레인 풀밭" class="track-green rabbit-track-green" />
-      <div class="rabbit-content">
-        <img src="../assets/rabbit2.png" alt="달리는토끼" class="running-rabbit"
-             :class="{run: rabbitRunning, stop: rabbitStopping}"/>
-        <img src="../assets/tree.png" alt="나무" class="tree"/>
-        <div class="rabbit-goalline"/>
-      </div>
+    <section class="lane turtle-lane" aria-label="거북이 경주 구역">
+      <img src="@/assets/green2.png" alt="" class="grass turtle-grass" />
+      <img ref="turtleEl" src="@/assets/turtle2.png" alt="달리는 거북이" class="runner runner-turtle" />
+      <div class="goal turtle-goal"></div>
+    </section>
+
+    <div class="hud" aria-live="polite">
+      <p class="status-text">{{ message }}</p>
+      <p v-if="winner" class="winner-text">{{ winner === 'rabbit' ? '토끼가 먼저 도착했어요' : '거북이가 끝까지 해냈어요' }}</p>
     </div>
 
+    <div v-if="countdown" class="countdown" aria-live="assertive">{{ countdown }}</div>
 
-    <button class="game-return" @click="reload"> 다시하기 </button>
-    <button class="main-return" @click="$router.push('/home')"> 메인화면 </button>
-    <button class="game-start" @click="gameStart"> 시작 </button>
-
-
-    <div class="turtle-ground">
-      <img src="../assets/green2.png" alt="거북이 레인 풀밭" class="track-green turtle-track-green" />
-      <div class="turtle-content">
-        <img src="../assets/turtle2.png" alt="달리는 거북이" class="running-turtle" :class="{run: turtleRunning}"/>
-        <div class="turtle-goalline"/>
-      </div>
-    </div>
-
-  </div>
-
+    <nav class="actions" aria-label="게임 조작">
+      <button class="btn retry-btn" type="button" :disabled="running" @click="reset">
+        다시하기
+      </button>
+      <button class="btn home-btn" type="button" :disabled="running" @click="router.push('/home')">
+        메인화면
+      </button>
+      <button class="btn start-btn" type="button" :disabled="running" @click="start">
+        시작
+      </button>
+    </nav>
+  </main>
 </template>
 
-
-
-
-<style>
-.main-view{
+<style scoped>
+.game-view {
   position: relative;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-
+  background: linear-gradient(#f6f6d1 0 50%, #eef6fd 50% 100%);
 }
 
-.game-return{
+.lane {
   position: absolute;
-  top: 39%;
-  left: 10%;
-  width: 9%;
-  height: 14%;
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-align: center;
-  transform: rotate(-30deg);
-  background: #f8d0e5;
-  border:  5px solid white;
-  border-radius:  100px;
-  z-index: 15;
-  cursor: pointer;
-  font-family: Danjo-bold-Regular;
-  transition: width 2s ease, height 2s ease, background 2s ease, transform 2s ease;
-}
-.game-return:hover{
-  width: 10%;
-  height: 15%;
-  background: rgb(244, 192, 220);
-  transform: rotate(-20deg);
-}
-.main-return{
-  position: absolute;
-  top: 41%;
-  left: 46%;
-  width: 9%;
-  height: 14%;
-  background: rgba(245, 186, 250, 0.55);
-  border:  5px solid white;
-  border-radius:  100px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  font-family: Danjo-bold-Regular;
-  text-align: center;
-  z-index: 15;
-  cursor: pointer;
-  transition: width 2s ease, height 2s ease, background 2s ease;
-}
-.main-return:hover{
-  width: 10%;
-  height: 15%;
-  background: rgba(242, 156, 250, 0.55);
-}
-.game-start{
-  position: absolute;
-  top: 45%;
-  left: 80%;
-  width: 9%;
-  height: 14%;
-  transform: rotate(24deg);
-  background: rgba(130, 170, 114, 0.75);
-  border:  5px solid white;
-  border-radius:  100px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  font-family: Danjo-bold-Regular;
-  text-align: center;
-  z-index: 15;
-  cursor: pointer;
-  transition: width 2s ease, height 2s ease, background 2s ease, transform 2s ease;
-}
-.game-start:hover{
-  width: 10%;
-  height: 15%;
-  background: rgba(98, 129, 86, 0.75);
-  transform: rotate(30deg);
-}
-
-.rabbit-ground{
-  position: absolute;
-  top: 0;
+  left: 0;
   width: 100%;
   height: 50%;
-  background: #f6f6d1;
   overflow: hidden;
 }
-.rabbit-content{
-  flex-direction: row;
+
+.rabbit-lane {
+  top: 0;
 }
 
-@keyframes rabbit-run {
-  0% {
-    left: -10%;
-  }
-  40% {
-    left: 50%;
-  }
-  60% {
-    left: 50%;
-  }
-  100% {
-    left: 90%;
-  }
+.turtle-lane {
+  top: 50%;
 }
 
-.running-rabbit{
+.grass {
   position: absolute;
-  top: 26%;
-  left: -10px;
-  width:20%;
+  left: -5vw;
+  width: 110vw;
+  max-width: none;
+  height: auto;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.rabbit-grass {
+  bottom: -4%;
+}
+
+.turtle-grass {
+  bottom: 14%;
+}
+
+.runner {
+  position: absolute;
+  left: 0.8vw;
+  width: 18vw;
+  max-width: 300px;
+  height: auto;
+  will-change: transform;
   z-index: 15;
-}
-.running-rabbit.run{
-  animation: rabbit-run 5s linear forwards;
-}
-.running-rabbit.stop {
-  animation: rabbit-run 7s linear forwards;
+  filter: drop-shadow(0 0.7vw 0.35vw rgba(55, 72, 54, 0.16));
 }
 
-.rabbit-goalline{
-  position: absolute;
-  left: 92%;
-  width: 3%;
-  height: 100%;
-  border-left: 3px solid white;
-  border-right: 3px solid white;
-  background: #dbebfa;
-  z-index: 8;
+.runner-rabbit {
+  top: 26%;
+}
+
+.runner-turtle {
+  bottom: -8%;
 }
 
 .tree {
   position: absolute;
+  top: -14%;
+  left: 52%;
   width: 27vw;
   height: auto;
-  top: -14%;
-  left: 25%;
-  transform: translateX(50%);
+  transform: translateX(-50%);
+  pointer-events: none;
   z-index: 12;
 }
 
-.turtle-ground{
+.goal {
   position: absolute;
-  top: 50%;
-  width: 100%;
-  height: 50%;
-  background: #eef6fd;
-  overflow: hidden;
-}
-.turtle-content{
-  flex-direction: row;
-}
-@keyframes turtle-run {
-  0% {
-    left: -10%;
-  }
-  100% {
-    left: 90%;
-  }
-}
-.running-turtle{
-  position: absolute;
-  bottom: -10%;
-  left: -10px;
-  width:20%;
-  z-index: 15;
-}
-.running-turtle.run {
-  animation: turtle-run 6s linear forwards;
-}
-.turtle-goalline{
-  position:absolute;
   left: 92%;
   width: 3%;
   height: 100%;
-  border-left: 3px solid white;
-  border-right: 3px solid white;
-  background: #fbfbb4;
+  border-left: 0.25vw solid white;
+  border-right: 0.25vw solid white;
   z-index: 8;
 }
 
-.track-green{
+.rabbit-goal {
+  background: #dbebfa;
+}
+
+.turtle-goal {
+  background: #fbfbb4;
+}
+
+.hud {
   position: absolute;
-  width: 100%;
-  max-width: none;
-  height: auto;
-  left: -90px;
-  object-fit: fill;
+  top: 3%;
+  left: 50%;
+  width: 30vw;
+  min-height: 5vw;
+  padding: 0.9vw 1.6vw;
+  transform: translateX(-50%);
+  border: 0.25vw solid white;
+  border-radius: 2vw;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 1vw 2vw rgba(73, 87, 82, 0.18);
+  text-align: center;
+  z-index: 20;
+  backdrop-filter: blur(4px);
+}
+
+.status-text,
+.winner-text {
+  margin: 0;
+  font-family: BagelFatOne-Regular, Danjo-bold-Regular, sans-serif;
+}
+
+.status-text {
+  color: #436d56;
+  font-size: 1.8vw;
+}
+
+.winner-text {
+  margin-top: 0.45vw;
+  color: #d076ba;
+  font-size: 1.2vw;
+}
+
+.countdown {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: 13vw;
+  aspect-ratio: 1;
+  place-items: center;
+  transform: translate(-50%, -50%);
+  border: 0.35vw solid white;
+  border-radius: 50%;
+  background: rgba(140, 170, 151, 0.9);
+  color: white;
+  font-family: BagelFatOne-Regular, Danjo-bold-Regular, sans-serif;
+  font-size: 4vw;
+  box-shadow: 0 1vw 2vw rgba(40, 54, 48, 0.2);
+  z-index: 30;
+}
+
+.actions {
+  position: absolute;
+  inset: 0;
   pointer-events: none;
-  z-index: 10;
+  z-index: 25;
 }
 
-.rabbit-track-green{
-  bottom: -5%;
+.btn {
+  position: absolute;
+  width: 9vw;
+  aspect-ratio: 1;
+  border: 0.35vw solid white;
+  border-radius: 50%;
+  color: #1f251f;
+  cursor: pointer;
+  font-family: Danjo-bold-Regular, BagelFatOne-Regular, sans-serif;
+  font-size: 1.15vw;
+  font-weight: bold;
+  pointer-events: auto;
+  transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
 }
 
-.turtle-track-green{
-  bottom: 15%;
+.btn:hover:not(:disabled) {
+  transform: translateY(-0.3vw) scale(1.04);
 }
 
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.retry-btn {
+  top: 39%;
+  left: 10%;
+  background: #f8d0e5;
+  transform: rotate(-30deg);
+}
+
+.retry-btn:hover:not(:disabled) {
+  transform: rotate(-22deg) translateY(-0.3vw) scale(1.04);
+}
+
+.home-btn {
+  top: 42%;
+  left: 46%;
+  background: rgba(245, 186, 250, 0.75);
+}
+
+.start-btn {
+  top: 44%;
+  left: 80%;
+  background: rgba(130, 170, 114, 0.82);
+  transform: rotate(24deg);
+}
+
+.start-btn:hover:not(:disabled) {
+  transform: rotate(30deg) translateY(-0.3vw) scale(1.04);
+}
 </style>

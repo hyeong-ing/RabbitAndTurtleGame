@@ -58,8 +58,8 @@
 .home-rabbit {
   position: absolute;
   left: -1%;
-  bottom: -3%;
-  width: 28vw;
+  bottom: -1%;
+  width: 30vw;
   height: auto;
   z-index: 3;
 }
