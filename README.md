@@ -1,17 +1,19 @@
-# 🐰 토끼와 거북이 경주게임 🐢
+# 👥 Training Insight
 
-### 🌐 배포 서버
-#### 이미지를 누르면 서버로 이동합니다.
-<a href="https://rabbitandturtle.vercel.app/home">
-        <img width="400" height="209" alt="game" src="https://github.com/user-attachments/assets/4d336dee-5a93-4575-96e6-886a83b54138" />
-</a>
+### 🖥️ 화면
+- 대시보드
+
+- 미수료자
+
+- AI 검색
+
 
 <br/>
 <br/>
 <br/>
 
 ### ⭐️ 프로젝트 설명
-- 토끼와 거북이 경주를 주제로 한 웹 게임입니다.
+- Codex를 이용하여 Fake AI
 - 프론트엔드와 Vue의 이해도를 높이기 위해 만들게 된 프로젝트입니다.
 - GSAP으로 토끼와 거북이 경주 애니메이션을 구현했습니다.
 - canvas-confetti로 결승선에 도착했을 때 폭죽 효과를 구현했습니다.
