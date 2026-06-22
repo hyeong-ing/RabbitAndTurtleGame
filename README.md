@@ -1,29 +1,21 @@
-# rabbitandturtle
+# 🐰 토끼와 거북이 경주게임 🐢
 
-This template should help get you started developing with Vue 3 in Vite.
+### Vue로 만든 토끼와 거북이 경주게임입니다. 
 
-## Recommended IDE Setup
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+<br/>
 
-## Customize configuration
+### 🌐 Server
+#### 이미지를 누르면 서버로 이동합니다
+<a href="https://rabbitandturtle.vercel.app/home">
+        <img width="400" height="209" alt="game" src="https://github.com/user-attachments/assets/4d336dee-5a93-4575-96e6-886a83b54138" />
+</a>
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+<br/>
+<br/>
+<br/>
 
-## Project Setup
+### 🛠️ 기술 스택 & 라이브러리
 
-```sh
-npm install
-```
 
-### Compile and Hot-Reload for Development
 
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
