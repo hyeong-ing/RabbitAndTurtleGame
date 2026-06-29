@@ -8,10 +8,10 @@
  프론트엔드의 이해를 높이기 위해 Vue로 간단한 게임을 만들어봤습니다. <br/>
  Java로는 주로 서버 로직이나 데이터 처리 흐름을 구현하는데,<br/>
  프론트엔드에서는 요소를 직접 움직이며 시각적 자극을 더 다양하게 줄 수 있다는 점이 흥미로웠습니다. <br/>
- 그래서 실제 코드는 어떻게 작성하는지 너무나도 궁금해서 바로 프로젝트를 시작하게 되었습니다. <br/>
+ 그래서 실제 코드는 어떻게 작성하는지 궁금해서 바로 프로젝트를 시작하게 되었습니다. <br/>
  <br/><br/>
 
-  <img width="700" height="360" alt="OG" src="https://github.com/user-attachments/assets/bac9c2a7-3252-4f19-a771-aa2016b59933" />
+ <img width="700" height="360" alt="OG" src="https://github.com/user-attachments/assets/bac9c2a7-3252-4f19-a771-aa2016b59933" />
 
 </p>
 
@@ -36,7 +36,7 @@
   
 + Youtube (동작화면)
 
-+ [Figma (다이어그램)]()
++ [Figma (다이어그램)](https://www.figma.com/board/JTQCqXpauKRSeEtVcoKImf/RabbitAndTurtleGame?node-id=0-1&t=9jksnkQBgMrLzgGP-1)
 
 
 <br/><br/>
@@ -44,8 +44,18 @@
 
 ### 🔶 프로젝트 설명
 
-+ 
-+ GSAP으로 토끼와 거북이 경주 애니메이션을 구현했습니다.
+<br/>
+
+<p align="center"> 
+  <img width="750" height="420" alt="스크린샷 2026-06-29 오후 12 45 06" src="https://github.com/user-attachments/assets/02d87f59-67a9-4434-b4e4-c6182b845ecb" />
+</p>
+
+<br/>
+
++ Vue와 JavaScript로 토끼와 거북이 경주 게임을 구현했습니다.
++ 게임 화면에서 현재 초를 기준으로 토끼 또는 거북이의 승자가 결정됩니다.
++ 결정된 승자에 따라 GSAP 애니메이션이 실행됩니다.
++ 경주가 종료되면 결과 문구와 폭죽 효과를 통해 사용자에게 시각적인 피드백을 제공합니다.
 + canvas-confetti로 결승선에 도착했을 때 폭죽 효과를 구현했습니다.
 
 
@@ -63,6 +73,8 @@
 
 
 ### 🔶 프로젝트 목표
++ 프론트엔드의 화면 전환, 상태 변화, 애니메이션 처리 방식 이해하기.
++ 
 
 
 
