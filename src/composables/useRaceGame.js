@@ -4,8 +4,6 @@ import confetti from 'canvas-confetti'
 
 const COUNTDOWN_STEPS = ['3', '2', '1', '출발!']
 
-const delay = (duration) => new Promise((resolve) => window.setTimeout(resolve, duration))
-
 function pickWinner() {
   const currentSeconds = new Date().getSeconds()
   return currentSeconds % 2 === 0 ? 'rabbit' : 'turtle'
@@ -17,6 +15,8 @@ export function useRaceGame({ rabbitEl, turtleEl }) {
   const status = ref('ready')
 
   let timeline
+  let timerId
+  let finishDelay
 
   const running = computed(() => status.value === 'countdown' || status.value === 'racing')
   const message = computed(() => {
@@ -27,7 +27,32 @@ export function useRaceGame({ rabbitEl, turtleEl }) {
     return '준비 완료'
   })
 
+  function clearDelay() {
+    if (timerId) {
+      window.clearTimeout(timerId)
+      timerId = null
+    }
+
+    finishDelay?.(false)
+    finishDelay = null
+  }
+
+  function delay(duration) {
+    clearDelay()
+
+    return new Promise((resolve) => {
+      finishDelay = resolve
+      timerId = window.setTimeout(() => {
+        timerId = null
+        finishDelay = null
+        resolve(true)
+      }, duration)
+    })
+  }
+
   function clear() {
+    clearDelay()
+
     timeline?.kill()
     timeline = null
 
@@ -54,10 +79,13 @@ export function useRaceGame({ rabbitEl, turtleEl }) {
 
     for (const step of COUNTDOWN_STEPS) {
       countdown.value = step
-      await delay(step === '출발!' ? 50 : 650)
+      const completed = await delay(step === '출발!' ? 50 : 650)
+
+      if (!completed) return false
     }
 
     countdown.value = ''
+    return true
   }
 
   function celebrate(nextWinner) {
@@ -81,7 +109,9 @@ export function useRaceGame({ rabbitEl, turtleEl }) {
   }
 
   function run(nextWinner) {
-    const finishX = () => window.innerWidth * 0.82
+    const laneX = (ratio) => () => window.innerWidth * ratio
+    const treeX = laneX(0.46)
+    const finishX = laneX(0.82)
 
     timeline = gsap.timeline({
       defaults: {
@@ -91,67 +121,68 @@ export function useRaceGame({ rabbitEl, turtleEl }) {
 
     if (nextWinner === 'rabbit') {
       timeline
-        .to(rabbitEl.value, {
-          x: () => window.innerWidth * 0.42,
-          y: -10,
-          rotate: -4,
-          duration: 2,
-          ease: 'power2.out',
-        }, 0)
-        .to(rabbitEl.value, {
-          y: 4,
-          rotate: -8,
-          duration: 0.65,
-          ease: 'sine.inOut',
-        })
-        .to(rabbitEl.value, {
-          y: -8,
-          rotate: 3,
-          duration: 0.3,
-          ease: 'power2.out',
-        })
-        .to(rabbitEl.value, {
-          x: finishX,
-          y: -12,
-          rotate: 3,
-          duration: 2.2,
-          ease: 'power3.out',
-          onComplete: () => end('rabbit'),
-        })
-        .to(turtleEl.value, {
-          x: () => window.innerWidth * 0.62,
-          y: 5,
-          duration: 5.8,
-        }, 0)
+          .to(rabbitEl.value, {
+            x: () => window.innerWidth * 0.42,
+            y: -10,
+            rotate: -4,
+            duration: 2,
+            ease: 'power2.out',
+          }, 0)
+          .to(rabbitEl.value, {
+            y: 4,
+            rotate: -8,
+            duration: 0.65,
+            ease: 'sine.inOut',
+          })
+          .to(rabbitEl.value, {
+            y: -8,
+            rotate: 3,
+            duration: 0.3,
+            ease: 'power2.out',
+          })
+          .to(rabbitEl.value, {
+            x: finishX,
+            y: -12,
+            rotate: 3,
+            duration: 2.2,
+            ease: 'power3.out',
+            onComplete: () => end('rabbit'),
+          })
+          .to(turtleEl.value, {
+            x: () => window.innerWidth * 0.72,
+            y: 5,
+            duration: 5.8,
+          }, 0)
     } else {
       timeline
-        .to(rabbitEl.value, {
-          x: () => window.innerWidth * 0.38,
-          y: -10,
-          duration: 2,
-          ease: 'power2.out',
-        }, 0)
-        .to(rabbitEl.value, {
-          rotate: -8,
-          y: 2,
-          duration: 1.1,
-          ease: 'sine.inOut',
-          yoyo: true,
-          repeat: 1,
-        })
-        .to(rabbitEl.value, {
-          x: () => window.innerWidth * 0.68,
-          y: -6,
-          rotate: 2,
-          duration: 2.8,
-        })
-        .to(turtleEl.value, {
-          x: finishX,
-          y: 2,
-          duration: 5.7,
-          ease: 'power1.out',
-          onComplete: () => end('turtle'),
-        }, 0)
+          .to(rabbitEl.value, {
+            x: () => window.innerWidth * 0.42,
+            y: -10,
+            duration: 2,
+            ease: 'power2.out',
+          }, 0)
+          .to(rabbitEl.value, {
+            rotate: -8,
+            y: 2,
+            duration: 0.55,
+            ease: 'sine.inOut',
+            yoyo: true,
+            repeat: 1,
+          })
+          .to(rabbitEl.value, {
+            x: () => window.innerWidth * 0.72,
+            y: -6,
+            rotate: 2,
+            duration: 2.0,
+            ease: 'power1.out',
+          })
+          .to(turtleEl.value, {
+            x: finishX,
+            y: 2,
+            duration: 5.4,
+            ease: 'power1.out',
+            onComplete: () => end('turtle'),
+          }, 0)
     }
   }
 
@@ -160,7 +191,9 @@ export function useRaceGame({ rabbitEl, turtleEl }) {
 
     reset()
     await nextTick()
-    await count()
+    const completed = await count()
+
+    if (!completed || !rabbitEl.value || !turtleEl.value) return
 
     status.value = 'racing'
     run(pickWinner())
