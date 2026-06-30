@@ -63,26 +63,157 @@
 
 
 ### 🔶 기술 스택 & 라이브러리
-- 프론트엔드: Vue 3
-- 빌드 도구 및 개발 서버: Vite
-- 배포: Vercel
-- 라이브러리 : GSAP, canvas-confetti 
++ 프론트엔드: Vue 3
++ 빌드 도구 및 개발 서버: Vite
++ 배포: Vercel
++ 라이브러리 : GSAP, canvas-confetti 
 
 
 <br/><br/>
 
 
 ### 🔶 프로젝트 목표
-+ 프론트엔드의 화면 전환, 상태 변화, 애니메이션 처리 방식 이해하기.
-+ 
-
-
++ Vue 동작 방식 이해하기.
++ 화면 전환, 상태 변화, 애니메이션 처리 방식 이해하기.
++ 애니메이션 관련 라이브러리 사용해보기.
+  
 
 <br/><br/>
 
-### ⚙️ 로직
-- Vue Router를 사용하여 /home과 /game 화면을 분리합니다.
-- 현재 초를 2로 나눈 나머지에 따라 승자가 미리 정해집니다.
-  →  짝수 초 : 토끼 승리 | 홀수 초 : 거북이 승리
-- 결정된 승자에 맞춰 GSAP 애니메이션을 실행합니다.
-- 승자를 저장하고 결과 문구와 폭죽을 표시합니다.
+
+### 🔶 핵심 로직
+1) Vue Router로 화면 분리 <br/>
+vue-router 라이브러리를 사용해서 홈 화면과 게임 화면을 나눴습니다.
+
+<br/>
+
++ 사용자의 버튼 클릭에 따라 /home에서 /game으로 이동하도록 구성했습니다.
+
+
+```
+import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '@/views/HomeView.vue'
+import GameView from '@/views/GameView.vue'
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    { path: '/', redirect: '/home' },
+    { path: '/home', component: HomeView },
+    { path: '/game', component: GameView },
+  ],
+})
+
+export default router
+```
+
+<br/>
+<br/>
+
+----
+
+2) 승패 결정 <br/>
+
+<br/>
+
++ 현재 초를 2로 나눈 나머지를 기준으로 승자를 결정했습니다.
++ 짝수 초에는 토끼, 홀수 초에는 거북이가 승리합니다.
+```
+function pickWinner() {
+  const currentSeconds = new Date().getSeconds()
+  return currentSeconds % 2 === 0 ? 'rabbit' : 'turtle'
+}
+```  
+
+<br/>
+<br/>
+
+----
+
+3) GSAP으로 경주 애니메이션 실행 <br/>
+
+<br/>
+
++ GSAP timeline을 사용해 토끼와 거북이의 이동 애니메이션을 제어했습니다.
++ 미리 결정된 승자에 따라 먼저 결승선에 도착하는 캐릭터가 달라지도록 구성했습니다.
+``` 
+import { gsap } from 'gsap'
+
+function run(nextWinner) {
+  const finishX = () => window.innerWidth * 0.82
+
+  timeline = gsap.timeline({
+    defaults: { ease: 'power1.inOut' },
+  })
+
+  if (nextWinner === 'rabbit') {
+    timeline
+      .to(rabbitEl.value, {
+        x: finishX,
+        duration: 2.2,
+        onComplete: () => end('rabbit'),
+      })
+      .to(turtleEl.value, {
+        x: () => window.innerWidth * 0.62,
+        duration: 5.8,
+      }, 0)
+  } else {
+    timeline
+      .to(rabbitEl.value, {
+        x: () => window.innerWidth * 0.68,
+        duration: 2.8,
+      })
+      .to(turtleEl.value, {
+        x: finishX,
+        duration: 5.7,
+        onComplete: () => end('turtle'),
+      }, 0)
+  }
+}
+```
+
+<br/>
+<br/>
+
+----
+
+4) 게임 상태 관리와 결과 표시 <br/>
+카운트다운, 진행 중, 종료 상태를 관리하고 결과 문구를 화면에 보여줍니다.
+
+<br/>
+
++ ref와 computed를 사용해서 게임 상태와 결과 메시지를 관리했습니다.
++ 경주가 끝나면 승자 값을 저장하고, 해당 값에 따라 결과 문구를 화면에 표시했습니다.
+
+```
+const countdown = ref('')
+const winner = ref('')
+const status = ref('ready')
+
+const message = computed(() => {
+  if (winner.value === 'rabbit') return '토끼 승리!'
+  if (winner.value === 'turtle') return '거북이 승리!'
+  if (status.value === 'countdown') return '잠시 후 출발합니다'
+  if (status.value === 'racing') return '경주 중입니다'
+  return '준비 완료'
+})
+
+function end(nextWinner) {
+  winner.value = nextWinner
+  status.value = 'finished'
+  celebrate(nextWinner)
+}
+```
+
+
+### 🔶 문제 해결
+
+1) 카운트다운 중 페이지를 벗어날 때
+
++ 카운트다운 중 페이지 벗어났다가 다시 게임 화면으로 들어와서 시작 버튼을 눌렀습니다.
++ 동물이 도착하기도 전에 폭죽이 터지는 문제를 발견했습니다.
++ 페이지를 나갔어도 카운트다운이 지속되
+
+
+
+
