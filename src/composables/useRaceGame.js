@@ -173,7 +173,7 @@ export function useRaceGame({ rabbitEl, turtleEl }) {
             x: () => window.innerWidth * 0.72,
             y: -6,
             rotate: 2,
-            duration: 2.0,
+            duration: 2.4,
             ease: 'power1.out',
           })
           .to(turtleEl.value, {
