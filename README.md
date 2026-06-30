@@ -137,37 +137,41 @@ function pickWinner() {
 + GSAP timeline을 사용해 토끼와 거북이의 이동 애니메이션을 제어했습니다.
 + 미리 결정된 승자에 따라 먼저 결승선에 도착하는 캐릭터가 달라지도록 구성했습니다.
 ``` 
-import { gsap } from 'gsap'
-
-function run(nextWinner) {
-  const finishX = () => window.innerWidth * 0.82
-
   timeline = gsap.timeline({
     defaults: { ease: 'power1.inOut' },
   })
 
   if (nextWinner === 'rabbit') {
     timeline
-      .to(rabbitEl.value, {
-        x: finishX,
-        duration: 2.2,
-        onComplete: () => end('rabbit'),
-      })
-      .to(turtleEl.value, {
-        x: () => window.innerWidth * 0.62,
-        duration: 5.8,
-      }, 0)
+         .to(rabbitEl.value, {
+            x: finishX,
+            y: -12,
+            rotate: 3,
+            duration: 2.2,
+            ease: 'power3.out',
+            onComplete: () => end('rabbit'),
+          })
+          .to(turtleEl.value, {
+            x: () => window.innerWidth * 0.72,
+            y: 5,
+            duration: 5.8,
+          }, 0)
   } else {
     timeline
-      .to(rabbitEl.value, {
-        x: () => window.innerWidth * 0.68,
-        duration: 2.8,
-      })
-      .to(turtleEl.value, {
-        x: finishX,
-        duration: 5.7,
-        onComplete: () => end('turtle'),
-      }, 0)
+         .to(rabbitEl.value, {
+            x: () => window.innerWidth * 0.72,
+            y: -6,
+            rotate: 2,
+            duration: 2.0,
+            ease: 'power1.out',
+          })
+          .to(turtleEl.value, {
+            x: finishX,
+            y: 2,
+            duration: 5.4,
+            ease: 'power1.out',
+            onComplete: () => end('turtle'),
+          }, 0)
   }
 }
 ```
@@ -204,16 +208,67 @@ function end(nextWinner) {
   celebrate(nextWinner)
 }
 ```
-
+<br/>
+<br/>
 
 ### 🔶 문제 해결
 
-1) 카운트다운 중 페이지를 벗어날 때
+### [ 카운트다운 타이머 중복 실행 ] <br/>
 
-+ 카운트다운 중 페이지 벗어났다가 다시 게임 화면으로 들어와서 시작 버튼을 눌렀습니다.
-+ 동물이 도착하기도 전에 폭죽이 터지는 문제를 발견했습니다.
-+ 페이지를 나갔어도 카운트다운이 지속되
+1) 문제 발생 <br/>
++ 카운트다운 중에 페이지를 벗어났다가 다시 게임 시작을 누르면 폭죽 효과가 두 번 발생하는 문제를 발견했습니다. <br/>
++ 이전 게임 흐름과 현재 게임 흐름이 동시에 실행되고 있어서 발생했던 것입니다. 
+
+<br/>
+<br/>
+
+2) 원인 파악 <br/>
++ 카운트다운에 사용한 setTimeout이 페이지를 벗어날 때 정리되지 않았기 때문에 문제가 발생했습니다. <br/>
++ 컴포넌트가 사라져도 이전 setTimeout이 내부에서 계속 살아 있었고, 기존 비동기 흐름이 이어져 run( ), end( ), celebrate( ) 로직이 실행되었습니다.
+
+<br/>
+<br/>
+
+3) 문제 해결 <br/>
++ setTimeout을 제어하기 위해 timerId를 저장하고 진행 중인 delay()를 중단할 수 있도록 finishDelay를 추가했습니다.  <br/>
++ 화면 이탈 시 clearDelay( )로 기존 타이머를 제거했습니다. <br/>
+  
+```
+let timerId
+let finishDelay
+```
+
+```
+function clearDelay() {
+  if (timerId) {
+    window.clearTimeout(timerId)
+    timerId = null
+  }
+  finishDelay?.(false)
+  finishDelay = null
+}
+```
+
+<br/>
+
++ 카운트다운이 중간에 취소되면 이후 로직이 실행되지 않도록 처리했습니다.
+
+```
+    const completed = await count()
+
+    if (!completed || !rabbitEl.value || !turtleEl.value) return
+
+    status.value = 'racing'
+    run(pickWinner())
+```
 
 
+<br/>
+<br/>
 
+4) 결과 <br/>
++ 페이지에 벗어날 때 이전 타이머가 정리되면서 기존 게임 흐름이 새 게임에 영향을 주기 않게 되었습니다. <br/>
++ 이를 통해 폭죽 효과가 중복으로 실행되는 문제를 해결했습니다.
 
+<br/>
+<br/>
